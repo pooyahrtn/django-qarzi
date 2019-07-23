@@ -1,0 +1,26 @@
+version: '3'
+
+services: 
+  api:
+    build: ./api
+    container_name: 'api'
+    command: >
+      bash -c "python wait_for_postgres.py &&
+               ./manage.py migrate &&
+               ./manage.py runserver 0.0.0.0:8000"
+    depends_on: 
+      - postgres
+    volumes: 
+      - ./api:/code
+    env_file: ./.env
+    
+  postgres:
+    image: postgres:11.4
+    container_name: 'postgres'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file: ./.env
+
+volumes:
+  postgres_data:
+      
