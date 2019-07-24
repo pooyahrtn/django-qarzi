@@ -13,13 +13,36 @@ services:
     volumes: 
       - ./api:/code
     env_file: ./.env
-    
+  redis:
+    image: "redis:alpine"
+
+  celery:
+    build: ./api
+    command: celery -A api worker -l info
+    volumes:
+      - ./api:/code
+    env_file: ./.env
+    depends_on:
+      - postgres
+      - redis
+
+  celery-beat:
+    build: ./api
+    command: celery -A api beat -l info
+    volumes:
+      - ./api:/code
+    env_file: ./.env
+    depends_on:
+      - postgres
+      - redis
+
   postgres:
     image: postgres:11.4
     container_name: 'postgres'
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file: ./.env
+
 
 volumes:
   postgres_data:

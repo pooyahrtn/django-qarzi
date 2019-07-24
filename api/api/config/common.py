@@ -1,7 +1,7 @@
-
+from os.path import join
 import os
 from configurations import Configuration
-
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -12,7 +12,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class Common(Configuration):
     # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = os.getenv('SECRET_KEY')
+    SECRET_KEY = '&fakuc1%p(l9d6$migqj^jz(ff5-k8ij#zbps5q#$win$__e+j'
 
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
@@ -29,8 +29,10 @@ class Common(Configuration):
         'django.contrib.messages',
         'django.contrib.staticfiles',
 
-        'rest_framework',            # utilities for rest apis
+        'rest_framework',  # utilities for rest apis
         'rest_framework.authtoken',
+        'rest_framework_simplejwt',
+        'phone_number.apps.PhoneNumberConfig',
         'users.apps.UsersConfig',
     ]
 
@@ -113,3 +115,52 @@ class Common(Configuration):
     # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
     STATIC_URL = '/static/'
+
+    # Media files
+    MEDIA_ROOT = join(os.path.dirname(BASE_DIR), 'media')
+    MEDIA_URL = '/media/'
+
+    AUTH_USER_MODEL = 'users.User'
+
+    REST_FRAMEWORK = {
+        'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+        'PAGE_SIZE': int(os.getenv('DJANGO_PAGINATION_LIMIT', 10)),
+        'DATETIME_FORMAT': '%Y-%m-%dT%H:%M:%S%z',
+        'DEFAULT_RENDERER_CLASSES': (
+            'rest_framework.renderers.JSONRenderer',
+            'rest_framework.renderers.BrowsableAPIRenderer',
+        ),
+        'DEFAULT_PERMISSION_CLASSES': [
+            'rest_framework.permissions.IsAuthenticated',
+        ],
+        'DEFAULT_AUTHENTICATION_CLASSES': [
+            'rest_framework_simplejwt.authentication.JWTAuthentication',
+        ],
+    }
+
+    SIMPLE_JWT = {
+        'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
+        'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+        'ROTATE_REFRESH_TOKENS': True,
+        'BLACKLIST_AFTER_ROTATION': True,
+
+        'AUTH_HEADER_TYPES': ('Bearer',),
+        'USER_ID_FIELD': 'id',
+        'USER_ID_CLAIM': 'user_id',
+
+        'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+        'TOKEN_TYPE_CLAIM': 'token_type',
+
+        # 'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+        # 'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+        # 'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    }
+
+    CELERY_BROKER_URL = 'redis://redis:6379'
+    CELERY_RESULT_BACKEND = 'redis://redis:6379'
+    CELERY_ACCEPT_CONTENT = ['application/json']
+    CELERY_TASK_SERIALIZER = 'json'
+    CELERY_RESULT_SERIALIZER = 'json'
+    CELERY_BEAT_SCHEDULE = {
+
+    }

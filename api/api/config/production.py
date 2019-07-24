@@ -1,5 +1,6 @@
+import os
 from .common import Common
 
 
 class Production(Common):
-    pass
+    SECRET_KEY = os.getenv('SECRET_KEY')

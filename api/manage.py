@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 import os
 import sys
+from configurations import importer
+
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "api.config")
     os.environ.setdefault("DJANGO_CONFIGURATION", "Local")
 
     try:
+        importer.install()
         from configurations.management import execute_from_command_line
     except ImportError:
         # The above import may fail for some other reason. Ensure that the
