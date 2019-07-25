@@ -1,8 +1,10 @@
 from .models import PhoneNumber
 from .tasks import send_message
-from datetime import datetime
+from datetime import datetime, timedelta
+from django.utils import timezone
 from secrets import randbelow
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 
 
 def create_random_code():
@@ -32,3 +34,14 @@ def create_and_send_code(user):
     phone_number = create_user_phone(user)
     send_user_message(phone_number)
 
+
+def is_confirm_code_valid(phone_number: str, confirm_code: str) -> bool:
+    phone_object: PhoneNumber = get_object_or_404(PhoneNumber, phone_number=phone_number)
+    return phone_object.confirm_code == confirm_code and \
+           phone_object.last_sent_time + timedelta(minutes=2) > timezone.now()
+
+
+def confirm_phone_number(phone_number: str):
+    phone_object: PhoneNumber = get_object_or_404(PhoneNumber, phone_number=phone_number)
+    phone_object.confirmed = True
+    phone_object.save()

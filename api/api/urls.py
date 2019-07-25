@@ -4,7 +4,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 
 V_ONE = [
-    path(r'users', include('users.urls'))
+    path(r'users/', include('users.urls')),
+    path(r'feeds/', include('feeds.urls'))
 ]
 
 urlpatterns = [

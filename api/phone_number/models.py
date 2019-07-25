@@ -16,7 +16,7 @@ class PhoneNumber(models.Model):
         User,
         on_delete=models.CASCADE
     )
-    last_sent_time = models.DateTimeField(auto_now_add=True)
+    last_sent_time = models.DateTimeField(auto_now_add=True, editable=True)
     retries = models.PositiveSmallIntegerField(default=0)
     confirmed = models.BooleanField(default=False)
     confirm_code = models.CharField(max_length=6)
