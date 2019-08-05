@@ -2,6 +2,13 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from phone_number import validators as phone_number_validators
+from stdimage import StdImageField
+from .tasks import process_photo_image
+
+
+def image_processor(file_name, variations, storage):
+    process_photo_image.delay(file_name, variations)
+    return False  # prevent default rendering
 
 
 class User(AbstractUser):
@@ -10,6 +17,16 @@ class User(AbstractUser):
         max_length=14,
         validators=[phone_number_validators.RegexValidator],
         unique=True,
+    )
+    image = StdImageField(
+        upload_to='profile',
+        variations={
+            'thumbnail': {"width": 100, "height": 100, "crop": True}
+        },
+        null=True,
+        blank=True,
+        delete_orphans=True,
+        render_variations=image_processor
     )
 
     def __str__(self):

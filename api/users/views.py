@@ -16,6 +16,8 @@ class UserViewSet(mixins.RetrieveModelMixin,
     serializer_class = UserSerializer
     permission_classes = (IsUserOrReadOnly,)
 
+    # def update(self, request, *args, **kwargs):
+    #
 
 class UserCreateViewSet(mixins.CreateModelMixin,
                         viewsets.GenericViewSet):

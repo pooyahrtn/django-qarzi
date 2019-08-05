@@ -11,11 +11,10 @@ class UserSerializer(serializers.ModelSerializer):
     """
     Default User Serializer
     """
-
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name',)
-        read_only_fields = ('username',)
+        fields = ('id', 'username', 'first_name', 'last_name', 'image')
+        read_only_fields = ('username', 'id')
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
@@ -85,4 +84,4 @@ class TokenObtainSerializer(TokenObtainPairSerializer):
 class PublicUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name',)
+        fields = ('id', 'first_name', 'last_name', 'image')

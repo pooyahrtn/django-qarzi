@@ -28,13 +28,15 @@ class Common(Configuration):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
-
-        'rest_framework',  # utilities for rest apis
+        'stdimage',
+        'polymorphic',
+        'rest_framework',
         'rest_framework.authtoken',
         'rest_framework_simplejwt',
         'phone_number.apps.PhoneNumberConfig',
         'users.apps.UsersConfig',
         'feeds.apps.FeedsConfig',
+        'suggests.apps.SuggestsConfig',
     ]
 
     MIDDLEWARE = [
@@ -111,6 +113,45 @@ class Common(Configuration):
     USE_L10N = True
 
     USE_TZ = True
+
+    # LOGGING = {
+    #     'version': 1,
+    #     'disable_existing_loggers': False,
+    #     'formatters': {
+    #         'simple': {
+    #             'format': 'velname)s %(message)s'
+    #         },
+    #     },
+    #     'handlers': {
+    #         'console': {
+    #             'level': 'INFO',
+    #             'class': 'logging.StreamHandler',
+    #             'formatter': 'simple'
+    #         },
+    #         'logstash': {
+    #             'level': 'INFO',
+    #             'class': 'logstash.TCPLogstashHandler',
+    #             'host': 'logstash',
+    #             'port': 5000,
+    #             'version': 1,
+    #             # Version of logstash event schema. Default value: 0 (for backward compatibility of the library)
+    #             'message_type': 'django',  # 'type' field in logstash message. Default value: 'logstash'.
+    #             'fqdn': False,  # Fully qualified domain name. Default value: false.
+    #             'tags': ['django.request'],  # list of tags. Default: None.
+    #         },
+    #     },
+    #     'loggers': {
+    #         'django.request': {
+    #             'handlers': ['logstash'],
+    #             'level': 'WARNING',
+    #             'propagate': True,
+    #         },
+    #         'django': {
+    #             'handlers': ['console'],
+    #             'propagate': True,
+    #         },
+    #     }
+    # }
 
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/2.2/howto/static-files/
