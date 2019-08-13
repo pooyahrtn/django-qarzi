@@ -22,17 +22,25 @@ def create_user_phone(user):
     return phone_number
 
 
-def send_user_message(phone_number):
+def send_phone_message(phone_number):
     phone_number.last_sent_time = datetime.now()
     phone_number.retries += 1
+    phone_number.save()
     if not settings.DEBUG:
         send_message.delay(phone_number.phone_number, phone_number.confirm_code)
     return phone_number
 
 
+def send_user_message(user):
+    phone_number = PhoneNumber.objects.get(user=user)
+    phone_number.confirm_code = create_random_code()
+    phone_number.save()
+    send_phone_message(phone_number)
+
+
 def create_and_send_code(user):
     phone_number = create_user_phone(user)
-    send_user_message(phone_number)
+    send_phone_message(phone_number)
 
 
 def is_confirm_code_valid(phone_number: str, confirm_code: str) -> bool:

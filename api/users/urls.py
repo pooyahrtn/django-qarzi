@@ -5,7 +5,7 @@ from rest_framework_simplejwt import views as jwt_views
 from .views import UserViewSet, UserCreateViewSet, TokenObtainView
 
 router = DefaultRouter()
-router.register(r'', UserViewSet)
+router.register(r'me', UserViewSet)
 router.register(r'', UserCreateViewSet)
 
 urlpatterns = [

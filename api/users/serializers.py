@@ -24,14 +24,18 @@ class CreateUserSerializer(serializers.ModelSerializer):
     username = serializers.RegexField(
         r'^00989\d{9}$',
         required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
+        # validators=[UniqueValidator(queryset=User.objects.all())]
     )
-    first_name = serializers.CharField(required=True, allow_blank=False)
-    last_name = serializers.CharField(required=True, allow_blank=False)
 
     def create(self, validated_data):
         # call create_user on user object. Without this
         # the password will be stored in plain text.
+        username = validated_data['username']
+
+        found_user = User.objects.filter(username=username).first()
+        if found_user:
+            phone_service.send_user_message(found_user)
+            return found_user
         user = User.objects.create_user(
             password=uuid.uuid4(),
             **validated_data
@@ -44,8 +48,6 @@ class CreateUserSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'username',
-            'first_name',
-            'last_name',
         )
 
 
@@ -77,7 +79,7 @@ class TokenObtainSerializer(TokenObtainPairSerializer):
 
         data['refresh'] = str(refresh)
         data['access'] = str(refresh.access_token)
-
+        data['user'] = UserSerializer(self.user).data
         return data
 
 

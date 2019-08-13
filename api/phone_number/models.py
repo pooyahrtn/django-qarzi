@@ -23,3 +23,6 @@ class PhoneNumber(models.Model):
 
     def __str__(self):
         return self.phone_number
+
+    class Meta:
+        ordering = ['-last_sent_time',]
