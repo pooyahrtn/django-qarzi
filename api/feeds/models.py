@@ -26,7 +26,7 @@ class BaseFeed(PolymorphicModel):
     created_time = models.DateTimeField(auto_now_add=True, editable=True)
 
     class Meta:
-        ordering = ['created_time']
+        ordering = ['-created_time']
 
     def __str__(self):
         return self.user.username + '  ' + self.game

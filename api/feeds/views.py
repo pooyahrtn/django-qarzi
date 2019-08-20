@@ -3,12 +3,15 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAu
 from django.shortcuts import get_object_or_404
 from . import models
 from . import serializers
+from utils.CursorPagination import CreatedTimeCursorPagination
 
 
 class BaseFeedViewSet(viewsets.GenericViewSet,
                       mixins.ListModelMixin,
                       mixins.RetrieveModelMixin,
                       mixins.CreateModelMixin):
+
+    pagination_class = CreatedTimeCursorPagination
 
     def perform_create(self, serializer):
         serializer.validated_data['user'] = self.request.user
@@ -39,6 +42,7 @@ class MyFeedsViewSet(viewsets.GenericViewSet,
     queryset = models.BaseFeed.objects.all()
     serializer_class = serializers.CombinedSerializer
     permission_classes = (IsAuthenticated,)
+    pagination_class = CreatedTimeCursorPagination
 
     def filter_queryset(self, queryset):
         return queryset.filter(user=self.request.user)
