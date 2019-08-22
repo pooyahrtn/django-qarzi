@@ -15,8 +15,8 @@ class BaseFeed(PolymorphicModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     checked = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    lat = models.DecimalField(max_digits=6, decimal_places=4, db_index=True)
-    long = models.DecimalField(max_digits=6, decimal_places=4, db_index=True)
+    lat = models.DecimalField(max_digits=8, decimal_places=4, db_index=True)
+    long = models.DecimalField(max_digits=8, decimal_places=4, db_index=True)
     game = models.CharField(max_length=100)
     console = models.CharField(max_length=2,
                                choices=CONSOLES,
