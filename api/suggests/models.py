@@ -34,10 +34,9 @@ class BaseSuggest(PolymorphicModel):
 
 class BorrowSuggest(BaseSuggest):
     duration = models.PositiveSmallIntegerField()
-    price = models.PositiveIntegerField()
 
 
 class LendSuggest(BaseSuggest):
     need_id = models.BooleanField(default=True)
-    price_per_day = models.PositiveIntegerField()
+
 

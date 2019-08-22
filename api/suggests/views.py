@@ -1,14 +1,16 @@
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated, AllowAny
+
+from utils.CursorPagination import CreatedTimeCursorPagination
 from . import models
 from . import serializers
-from . import services
 
 
 class IncomeSuggestsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.BaseSuggest.objects.all()
     serializer_class = serializers.IncomeLendSuggestSerializer
     permission_classes = (IsAuthenticated,)
+    pagination_class = CreatedTimeCursorPagination
 
     def filter_queryset(self, queryset):
         return queryset.filter(to_user=self.request.user)
@@ -18,6 +20,7 @@ class OutcomeSuggestsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.BaseSuggest.objects.all()
     serializer_class = serializers.CombinedOutcomeSuggestSerializer
     permission_classes = (IsAuthenticated,)
+    pagination_class = CreatedTimeCursorPagination
 
     def filter_queryset(self, queryset):
         return queryset.filter(from_user=self.request.user)
@@ -30,7 +33,10 @@ class CreateBorrowSuggestViewSet(viewsets.GenericViewSet,
     permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
-        services.create_borrow_suggest(**serializer.validated_data, from_user=self.request.user)
+        serializer.save(from_user=self.request.user)
+
+    # def perform_create(self, serializer):
+    #     return services.create_borrow_suggest(**serializer.validated_data, from_user=self.request.user)
 
 
 class CreateLendSuggestViewSet(viewsets.GenericViewSet,
@@ -40,4 +46,4 @@ class CreateLendSuggestViewSet(viewsets.GenericViewSet,
     permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
-        services.create_lend_suggest(**serializer.validated_data, from_user=self.request.user)
+        serializer.save(from_user=self.request.user)

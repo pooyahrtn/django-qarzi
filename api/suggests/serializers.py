@@ -3,11 +3,13 @@ from . import models
 from feeds.serializers import CombinedSerializer
 from utils.PolymorphicSerializer import PolymorphicSerializer
 from users.serializers import UserSerializer
+from . import services
+
 
 BASE_FIELDS = ('id', 'feed', 'type', 'feed_id')
 READ_ONLY_FIELDS = ('id', 'type')
-LEND_FIELDS = BASE_FIELDS + ('need_id', 'price_per_day')
-BORROW_FIELDS = BASE_FIELDS + ('duration', 'price')
+LEND_FIELDS = BASE_FIELDS + ('need_id',)
+BORROW_FIELDS = BASE_FIELDS + ('duration',)
 
 
 class GenericSuggestSerializer(serializers.ModelSerializer):
@@ -26,6 +28,13 @@ class OutcomeBorrowSuggestSerializer(GenericSuggestSerializer):
         fields = BORROW_FIELDS
         read_only_fields = READ_ONLY_FIELDS
 
+    def create(self, validated_data):
+        return services.create_borrow_suggest(
+            validated_data['from_user'],
+            validated_data['feed_id'],
+            validated_data['duration']
+        )
+
 
 class OutcomeLendSuggestSerializer(GenericSuggestSerializer):
 
@@ -33,6 +42,14 @@ class OutcomeLendSuggestSerializer(GenericSuggestSerializer):
         model = models.LendSuggest
         fields = LEND_FIELDS
         read_only_fields = READ_ONLY_FIELDS
+
+    def create(self, validated_data):
+        return services.create_lend_suggest(
+            validated_data['from_user'],
+            validated_data['feed_id'],
+            validated_data['need_id']
+        )
+
 
 ##############################################################
 
