@@ -10,7 +10,7 @@ services:
                ./manage.py runserver 0.0.0.0:8000"
     depends_on: 
       - postgres
-      - logstash
+      # - logstash
     volumes: 
       - ./api:/code
     env_file: ./.env
