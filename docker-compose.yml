@@ -19,7 +19,8 @@ services:
 
   celery:
     build: ./api
-    command: celery -A api worker -l info
+    command: >
+      celery -A api worker -l info
     volumes:
       - ./api:/code
     env_file: ./.env
@@ -29,7 +30,8 @@ services:
 
   celery-beat:
     build: ./api
-    command: celery -A api beat -l info
+    command: >
+      celery -A api beat -l infos
     volumes:
       - ./api:/code
     env_file: ./.env
