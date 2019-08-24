@@ -29,6 +29,8 @@ services:
   certbot:
     image: certbot/certbot
     restart: always
+    networks:
+      - nginx_network
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
