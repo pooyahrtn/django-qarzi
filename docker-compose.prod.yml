@@ -2,8 +2,6 @@ version: "3"
 
 services:
   api:
-    networks:
-      - nginx_network
     environment:
       - DJANGO_CONFIGURATION=Production
 
@@ -23,6 +21,7 @@ services:
       - api
     networks:
       - nginx_network
+    
     restart: always
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
 
@@ -30,10 +29,10 @@ services:
     image: certbot/certbot
     container_name: certbot
     restart: always
-    networks:
-      - nginx_network
     environment:
       - DJANGO_CONFIGURATION=Production
+    networks:
+      - nginx_network
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
@@ -46,6 +45,4 @@ services:
     environment:
       - DJANGO_CONFIGURATION=Production
 
-networks:
-  nginx_network:
-    driver: bridge
+

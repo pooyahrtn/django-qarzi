@@ -14,9 +14,14 @@ services:
       - postgres
       # - logstash
     env_file: ./.env
+    networks:
+      - nginx_network
+      - db-network
 
   redis:
     image: "redis:alpine"
+    networks:
+        - nginx_network
 
   celery:
     build: ./api
@@ -30,6 +35,8 @@ services:
     depends_on:
       - postgres
       - redis
+    networks:
+      - nginx_network
 
   celery-beat:
     build: ./api
@@ -43,6 +50,8 @@ services:
     depends_on:
       - postgres
       - redis
+    networks:
+      - nginx_network
 
   postgres:
     image: postgres:11.4
@@ -50,6 +59,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file: ./.env
+    networks:
+      - db-network
 
   # elasticsearch:
   #   build:
@@ -108,3 +119,8 @@ volumes:
   media:
   # elasticsearch:
       
+networks:
+  nginx_network:
+    driver: bridge
+  db-network:
+    driver: bridge
