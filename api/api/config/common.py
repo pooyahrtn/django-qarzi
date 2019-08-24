@@ -157,9 +157,10 @@ class Common(Configuration):
     # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
     STATIC_URL = '/static/'
+    STATIC_ROOT = join(os.path.dirname(os.path.dirname(BASE_DIR)), 'static')
 
     # Media files
-    MEDIA_ROOT = join(os.path.dirname(BASE_DIR), 'media')
+    MEDIA_ROOT = join(os.path.dirname(os.path.dirname(BASE_DIR)), 'media')
     MEDIA_URL = '/media/'
 
     AUTH_USER_MODEL = 'users.User'

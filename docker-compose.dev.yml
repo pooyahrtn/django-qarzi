@@ -1,11 +1,11 @@
-version: '3'
+version: "3"
 
-services: 
+services:
   api:
-    ports: 
+    ports:
       - "3200:8000"
+
     command: >
       bash -c "python wait_for_postgres.py &&
                ./manage.py migrate &&
                ./manage.py runserver 0.0.0.0:8000"
-    
