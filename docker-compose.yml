@@ -8,6 +8,8 @@ services:
       - ./api:/code
       - static:/static  
       - media:/media 
+    environment:
+      - DJANGO_CONFIGURATION
     depends_on: 
       - postgres
       # - logstash
@@ -22,6 +24,8 @@ services:
       bash -c "celery -A api worker -l info"
     volumes:
       - ./api:/code
+    environment:
+      - DJANGO_CONFIGURATION
     env_file: ./.env
     depends_on:
       - postgres
@@ -33,6 +37,8 @@ services:
       bash -c "celery -A api beat -l infos"
     volumes:
       - ./api:/code
+    environment:
+      - DJANGO_CONFIGURATION
     env_file: ./.env
     depends_on:
       - postgres
