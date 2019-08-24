@@ -4,6 +4,8 @@ services:
   api:
     networks:
       - nginx_network
+    enviroment:
+      - DJANGO_CONFIGURATION=Production
 
   nginx:
     image: nginx:1.13
