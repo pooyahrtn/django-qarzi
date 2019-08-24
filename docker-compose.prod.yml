@@ -4,7 +4,7 @@ services:
   api:
     networks:
       - nginx_network
-    enviroment:
+    environment:
       - DJANGO_CONFIGURATION=Production
 
   nginx:
