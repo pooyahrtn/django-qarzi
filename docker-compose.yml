@@ -34,7 +34,7 @@ services:
   celery-beat:
     build: ./api
     command: >
-      bash -c "celery -A api beat -l infos"
+      bash -c "celery -A api beat -l info"
     volumes:
       - ./api:/code
     environment:
