@@ -15,12 +15,14 @@ services:
       - ./nginx:/etc/nginx/conf.d
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
+      - nginx_logs:/var/log/nginx
       - static:/api/static
       - media:/api/media
     depends_on:
       - api
     networks:
       - nginx_network
+      - elk
     
     restart: always
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
@@ -45,4 +47,77 @@ services:
     environment:
       - DJANGO_CONFIGURATION=Production
 
+  filebeat:
+    image: prima/filebeat
+    volumes:
+      - nginx_logs:/etc/logs/nginx # логи nginx
+      - ./filebeat/filebeat.yml:/filebeat.yml:ro
+      # - ./filebeat/certs:/etc/pki/tls/certs
+      # - ./filebeat/certs:/etc/pki/tls/private
+    networks:
+      - elk
 
+  elasticsearch:
+    build:
+      context: elasticsearch/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - elasticsearch:/usr/share/elasticsearch/data
+    # ports:
+    #   - "9200:9200"
+    #   - "9300:9300"
+    expose: 
+      - "9200"
+      - "9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTIC_PASSWORD: changeme
+    networks:
+      - elk
+
+  logstash:
+    container_name: 'logstash'
+    build:
+      context: logstash/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    # ports:
+    #   - "5000:5000"
+    #   - "9600:9600"
+    expose: 
+      - "5000"
+      - "9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+
+  kibana:
+    build:
+      context: kibana/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+
+volumes:
+  nginx_logs:
+
+networks:
+  elk:
+    driver: bridge
+  
