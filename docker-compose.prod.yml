@@ -116,6 +116,7 @@ services:
 
 volumes:
   nginx_logs:
+  elasticsearch:
 
 networks:
   elk:

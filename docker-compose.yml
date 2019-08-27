@@ -68,7 +68,7 @@ volumes:
   postgres_data:
   static:
   media:
-  # elasticsearch:
+  # 
       
 networks:
   nginx_network:
