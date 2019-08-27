@@ -1,6 +1,6 @@
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, viewsets, generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAuthenticated
-from django.shortcuts import get_object_or_404
+from . import permissions
 from . import models
 from . import serializers
 from utils.CursorPagination import CreatedTimeCursorPagination
@@ -37,7 +37,7 @@ class BorrowFeedsViewSet(BaseFeedViewSet):
 
 
 class MyFeedsViewSet(viewsets.GenericViewSet,
-                     mixins.ListModelMixin
+                     mixins.ListModelMixin,
                      ):
     queryset = models.BaseFeed.objects.all()
     serializer_class = serializers.CombinedSerializer
@@ -55,10 +55,13 @@ class ReportViewSet(viewsets.GenericViewSet,
     permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
-        # data = serializer.validated_data
-        # feed = get_object_or_404(models.BaseFeed, id=data['feed_id'])
-        # models.ReportFeed.objects.create(
-        #     reporter=self.request.user,
-        #     feed=feed,
-        # )
         serializer.save(reporter=self.request.user)
+
+
+class DeleteMyFeed(viewsets.GenericViewSet, mixins.DestroyModelMixin):
+    queryset = models.BaseFeed.objects.all()
+    serializer_class = serializers.CombinedSerializer
+    permission_classes = (IsAuthenticated, permissions.IsUser)
+
+
+

@@ -29,6 +29,12 @@ class User(AbstractUser):
         render_variations=image_processor
     )
 
+    notification_token = models.CharField(
+        max_length=300,
+        null=True,
+        blank=True
+    )
+
     def __str__(self):
         return self.username
 

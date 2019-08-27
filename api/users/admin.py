@@ -14,10 +14,11 @@ class UserAdmin(admin.ModelAdmin):
 
     def headshot_image(self, obj):
         image = obj.image
-        return mark_safe(
-            '<img src="{url}" width="{width}" height={height} />'.format(
-                url=image.url,
-                width=image.width,
-                height=image.height,
-            )
-        )
+
+        # return mark_safe(
+        #     '<img src="{url}" width="{width}" height={height} />'.format(
+        #         url=image.url,
+        #         width=image.width,
+        #         height=image.height,
+        #     )
+        # )
