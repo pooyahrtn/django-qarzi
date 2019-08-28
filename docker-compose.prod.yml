@@ -60,7 +60,8 @@ services:
 
   elk:
     image: sebp/elk
-    networks: -elk
+    networks: 
+      - elk
     expose:
       - "5044"
       - "5601"
