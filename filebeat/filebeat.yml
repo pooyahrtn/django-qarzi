@@ -8,5 +8,5 @@ output:
 filebeat:
   inputs:
     - paths:
-        - "/var/log/nginx/*.log"
+        - "/var/log/nginx/qarzi-access.log"
       document_type: nginx-access
