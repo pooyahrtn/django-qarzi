@@ -47,29 +47,6 @@ services:
     environment:
       - DJANGO_CONFIGURATION=Production
 
-  filebeat:
-    image: "docker.elastic.co/beats/filebeat:${ELASTIC_VERSION}"
-    command: filebeat -e -strict.perms=false
-    user: root
-    volumes:
-      - nginx_logs:/var/log/nginx/
-      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
-      - ./filebeat/logstash-beats.crt:/etc/pki/tls/certs/logstash-beats.crt
-      # - ./filebeat/certs:/etc/pki/tls/certs
-      # - ./filebeat/certs:/etc/pki/tls/private
-    networks:
-      - elk
-
-  elk:
-    image: sebp/elk
-    networks:
-      - elk
-    expose:
-      - "5044"
-      - "9200"
-    ports:
-      - "5601:5601"
-
 volumes:
   nginx_logs:
   elasticsearch:
