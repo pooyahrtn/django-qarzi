@@ -43,6 +43,7 @@ services:
   celery:
     environment:
       - DJANGO_CONFIGURATION=Production
+    
   celery-beat:
     environment:
       - DJANGO_CONFIGURATION=Production

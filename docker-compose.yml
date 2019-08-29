@@ -29,6 +29,7 @@ services:
       bash -c "celery -A api worker -l info"
     volumes:
       - ./api:/code
+      - media:/media 
     environment:
       - DJANGO_CONFIGURATION
     env_file: ./.env
