@@ -17,14 +17,16 @@ class BaseFeedViewSet(viewsets.GenericViewSet,
         serializer.validated_data['user'] = self.request.user
         serializer.save()
 
+    def filter_queryset(self, queryset):
+        return queryset.filter(checked=True, user__blocked=False)
+
 
 class LendFeedsViewSet(BaseFeedViewSet):
     queryset = models.LendFeed.objects.all()
     serializer_class = serializers.LendSerializer
     permission_classes = (AllowAny,)
 
-    def filter_queryset(self, queryset):
-        return queryset.filter(checked=True)
+    # def filter_queryset(self, queryset):
 
 
 class BorrowFeedsViewSet(BaseFeedViewSet):
@@ -32,8 +34,8 @@ class BorrowFeedsViewSet(BaseFeedViewSet):
     serializer_class = serializers.BorrowSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
-    def filter_queryset(self, queryset):
-        return queryset.filter(checked=True)
+    # def filter_queryset(self, queryset):
+    #     return queryset.filter(checked=True)
 
 
 class MyFeedsViewSet(viewsets.GenericViewSet,

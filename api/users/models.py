@@ -13,6 +13,7 @@ def image_processor(file_name, variations, storage):
 
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    blocked = models.BooleanField(default=False)
     username = models.CharField(
         max_length=14,
         validators=[phone_number_validators.RegexValidator],
