@@ -18,7 +18,7 @@ class BaseFeedViewSet(viewsets.GenericViewSet,
         serializer.save()
 
     def filter_queryset(self, queryset):
-        return queryset.filter(checked=True, user__blocked=False, user__active=True)
+        return queryset.filter(checked=True, user__blocked=False, user__is_active=True)
 
 
 class LendFeedsViewSet(BaseFeedViewSet):

@@ -34,7 +34,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
         found_user = User.objects.filter(username=username).first()
         if found_user:
-            found_user.active = True
+            found_user.is_active = True
             found_user.save()
             phone_service.send_user_message(found_user)
             return found_user
