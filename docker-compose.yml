@@ -63,6 +63,14 @@ services:
     networks:
       - db-network
 
+  dbbackup:
+    image: kartoza/pg-backup:9.6
+    volumes:
+      - ./backups:/backups
+    links:
+      - postgres:db
+    env_file: ./.env
+
 
 
 volumes:
