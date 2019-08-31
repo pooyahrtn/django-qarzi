@@ -179,6 +179,10 @@ class Common(Configuration):
         'DEFAULT_AUTHENTICATION_CLASSES': [
             'rest_framework_simplejwt.authentication.JWTAuthentication',
         ],
+        'DEFAULT_THROTTLE_RATES': {
+            'anon': '1000/day',
+            'user': '300/day',
+        }
     }
 
     SIMPLE_JWT = {
