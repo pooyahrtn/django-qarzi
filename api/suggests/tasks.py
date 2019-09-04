@@ -3,9 +3,8 @@ from firebase_admin import messaging
 
 
 @shared_task
-def send_notification(to_user_token, title, body, data={}):
+def send_notification(to_user_token, title, body):
     message = messaging.Message(
-        data=data,
         notification=messaging.Notification(body=body, title=title),
         token=to_user_token,
     )
