@@ -114,44 +114,53 @@ class Common(Configuration):
 
     USE_TZ = True
 
-    # LOGGING = {
-    #     'version': 1,
-    #     'disable_existing_loggers': False,
-    #     'formatters': {
-    #         'simple': {
-    #             'format': 'velname)s %(message)s'
-    #         },
-    #     },
-    #     'handlers': {
-    #         'console': {
-    #             'level': 'INFO',
-    #             'class': 'logging.StreamHandler',
-    #             'formatter': 'simple'
-    #         },
-    #         'logstash': {
-    #             'level': 'INFO',
-    #             'class': 'logstash.TCPLogstashHandler',
-    #             'host': 'logstash',
-    #             'port': 5000,
-    #             'version': 1,
-    #             # Version of logstash event schema. Default value: 0 (for backward compatibility of the library)
-    #             'message_type': 'django',  # 'type' field in logstash message. Default value: 'logstash'.
-    #             'fqdn': False,  # Fully qualified domain name. Default value: false.
-    #             'tags': ['django.request'],  # list of tags. Default: None.
-    #         },
-    #     },
-    #     'loggers': {
-    #         'django.request': {
-    #             'handlers': ['logstash'],
-    #             'level': 'WARNING',
-    #             'propagate': True,
-    #         },
-    #         'django': {
-    #             'handlers': ['console'],
-    #             'propagate': True,
-    #         },
-    #     }
-    # }
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'filters': {
+            'require_debug_false': {
+                '()': 'django.utils.log.RequireDebugFalse',
+            },
+            'require_debug_true': {
+                '()': 'django.utils.log.RequireDebugTrue',
+            },
+        },
+        'formatters': {
+            'django.server': {
+                '()': 'django.utils.log.ServerFormatter',
+                'format': '[%(server_time)s] %(message)s',
+            }
+        },
+        'handlers': {
+            'console': {
+                'level': 'INFO',
+                'filters': ['require_debug_true'],
+                'class': 'logging.StreamHandler',
+            },
+            'console_debug_false': {
+                'level': 'ERROR',
+                'filters': ['require_debug_false'],
+                'class': 'logging.StreamHandler',
+            },
+            'django.server': {
+                'level': 'INFO',
+                'class': 'logging.StreamHandler',
+                'formatter': 'django.server',
+            },
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['console', 'console_debug_false'],
+                'level': 'INFO',
+            },
+            'django.server': {
+                'handlers': ['django.server'],
+                'level': 'INFO',
+                'propagate': False,
+            }
+        }
+    }
+
 
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/2.2/howto/static-files/
