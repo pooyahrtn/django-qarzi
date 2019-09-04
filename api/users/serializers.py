@@ -1,5 +1,4 @@
 from rest_framework import serializers, exceptions
-from rest_framework.validators import UniqueValidator
 from .models import User
 import uuid
 from phone_number import services as phone_service
@@ -11,6 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
     """
     Default User Serializer
     """
+    is_active = serializers.BooleanField(default=True)
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'image', 'notification_token', 'is_active')
