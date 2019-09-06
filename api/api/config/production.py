@@ -5,4 +5,3 @@ from .common import Common
 class Production(Common):
     SECRET_KEY = os.getenv('SECRET_KEY')
     DEBUG = False
-    SECURE_SSL_REDIRECT = True
