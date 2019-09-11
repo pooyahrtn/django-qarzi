@@ -31,6 +31,9 @@ class BaseSuggest(PolymorphicModel):
     def __str__(self):
         return '{} to {} game: {}'.format(self.from_user.username,self.to_user.username,self.feed.game)
 
+    class Meta:
+        ordering = ['-created_time']
+
 
 class BorrowSuggest(BaseSuggest):
     duration = models.PositiveSmallIntegerField()

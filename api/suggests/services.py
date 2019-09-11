@@ -4,15 +4,19 @@ from feeds.models import BorrowFeed, LendFeed, BaseFeed
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import ValidationError
 from . import tasks
+import logging
 
 
 def send_suggest_notification(to_user: User, feed: BaseFeed):
     if to_user.notification_token:
-        tasks.send_notification(
-            to_user_token=to_user.notification_token,
-            title='درخواست جدید!',
-            body='شما یک درخواست جدید برای بازی {} دارید'.format(feed.game),
-        )
+        try:
+            tasks.send_notification(
+                to_user_token=to_user.notification_token,
+                title='درخواست جدید!',
+                body='شما یک درخواست جدید برای بازی {} دارید'.format(feed.game),
+            )
+        except:
+            logging.error("Notification Error")
 
 
 def is_request_exists(from_user: User, feed):
