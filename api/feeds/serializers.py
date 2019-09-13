@@ -6,8 +6,6 @@ from django.shortcuts import get_object_or_404
 
 BASE_FEED_FIELDS = (
     'user',
-    'lat',
-    'long',
     'game',
     'console',
     'id',

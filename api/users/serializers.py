@@ -13,7 +13,17 @@ class UserSerializer(serializers.ModelSerializer):
     is_active = serializers.BooleanField(default=True)
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'image', 'notification_token', 'is_active')
+        fields = ('id',
+                  'username',
+                  'first_name',
+                  'last_name',
+                  'image',
+                  'notification_token',
+                  'is_active',
+                  'lat',
+                  'long',
+                  'allow_location',
+                  )
         read_only_fields = ('username', 'id')
 
 
@@ -86,6 +96,12 @@ class TokenObtainSerializer(TokenObtainPairSerializer):
 
 
 class PublicUserSerializer(serializers.ModelSerializer):
+    location = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'image')
+        fields = ('id', 'first_name', 'last_name', 'image', 'location')
+
+    def get_location(self, obj: User):
+        if obj.allow_location:
+            return {"lat": obj.lat, "long": obj.long }

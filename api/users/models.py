@@ -36,6 +36,11 @@ class User(AbstractUser):
         blank=True
     )
 
+    lat = models.DecimalField(max_digits=8, decimal_places=4, db_index=True, null=True, blank=True)
+    long = models.DecimalField(max_digits=8, decimal_places=4, db_index=True, null=True, blank=True)
+
+    allow_location = models.BooleanField(default=False)
+
     def __str__(self):
         return self.username
 
