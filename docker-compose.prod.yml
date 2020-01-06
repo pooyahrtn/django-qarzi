@@ -2,43 +2,52 @@ version: "3"
 
 services:
   api:
+    ports: 
+      - "3011:8000"
     environment:
       - DJANGO_CONFIGURATION=Production
-
-  nginx:
-    image: nginx:1.13
-    container_name: nginx
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-      - nginx_logs:/var/log/nginx
-      - static:/api/static
-      - media:/api/media
-    depends_on:
-      - api
+      - "VIRTUAL_HOST=jarent.app"
+      - "LETSENCRYPT_HOST=jarent.app"
+      - "LETSENCRYPT_EMAIL=pooyaharatian@gmail.com"
+      - "VIRTUAL_PORT=3011"
     networks:
-      - nginx_network
-      - elk
+      - backend_chat
 
-    restart: always
-    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
 
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    restart: always
-    environment:
-      - DJANGO_CONFIGURATION=Production
-    networks:
-      - nginx_network
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  # nginx:
+  #   image: nginx:1.13
+  #   container_name: nginx
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   volumes:
+  #     - ./nginx:/etc/nginx/conf.d
+  #     - ./certbot/conf:/etc/letsencrypt
+  #     - ./certbot/www:/var/www/certbot
+  #     - nginx_logs:/var/log/nginx
+  #     - static:/api/static
+  #     - media:/api/media
+  #   depends_on:
+  #     - api
+  #   networks:
+  #     - nginx_network
+  #     - elk
+
+  #   restart: always
+  #   command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+
+  # certbot:
+  #   image: certbot/certbot
+  #   container_name: certbot
+  #   restart: always
+  #   environment:
+  #     - DJANGO_CONFIGURATION=Production
+  #   networks:
+  #     - nginx_network
+  #   volumes:
+  #     - ./certbot/conf:/etc/letsencrypt
+  #     - ./certbot/www:/var/www/certbot
+  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   celery:
     environment:
@@ -54,3 +63,5 @@ volumes:
 networks:
   elk:
     driver: bridge
+  backend_chat:
+    external: true
