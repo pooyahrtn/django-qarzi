@@ -10,6 +10,7 @@ services:
       - "LETSENCRYPT_HOST=jarent.app"
       - "LETSENCRYPT_EMAIL=pooyaharatian@gmail.com"
       - "VIRTUAL_PORT=3011"
+    restart: always
     networks:
       - backend_chat
 
@@ -50,6 +51,7 @@ services:
   #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   celery:
+    restart: always
     environment:
       - DJANGO_CONFIGURATION=Production
     
